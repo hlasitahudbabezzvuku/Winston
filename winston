@@ -120,6 +120,7 @@ main::main ()
         fi
     done
 
+    declare action
     for (( i = 1; i - 1 < "${#}"; i++ )); do
         case "${!i}" in
             '--version' | '-v')
@@ -129,8 +130,15 @@ main::main ()
             '--nocolor')
                 declare -g WINSTON_NOCOLOR="true"
                 ;;
-            *)
+            -*)
                 log::error "Unknown option ${!i}"
+                ;;
+            *)
+                if [[ -z "${action:-}" ]]; then
+                    action="${!i}"
+                else
+                    log::error "Multiple actions provided: ${action} and ${!i}"
+                fi
                 ;;
         esac
     done
