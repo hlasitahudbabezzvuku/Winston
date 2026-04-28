@@ -92,6 +92,21 @@ main::main ()
             log::error "[ERROR]: Could not find \"%s\"" "${dep}" 1>&2
         fi
     done
+
+    for (( i = 1; i - 1 < "${#}"; i++ )); do
+        case "${!i}" in
+            '--version' | '-v')
+                printf 'Bash version %s\n' "${BASH_VERSINFO[*]}"
+                exit 0
+                ;;
+            '--nocolor')
+                declare -g WINSTON_NOCOLOR="true"
+                ;;
+            *)
+                log::error "Unknown option ${!i}"
+                ;;
+        esac
+    done
 }
 
 main::main "${@}"
