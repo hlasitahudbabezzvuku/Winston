@@ -103,6 +103,13 @@ engine::clean ()
 ### Main ###
 ############
 
+declare -Ar ACTIONS=(
+    ["init"]="engine::init"
+    ["update"]="engine::update"
+    ["clean"]="engine::clean"
+)
+
+
 main::main ()
 {
     printf 'Winston version %s\n' "${WINSTON_VERSION}"
