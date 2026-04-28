@@ -25,6 +25,11 @@ fi
 declare -r WINSTON_VERSION="2026.04.28"
 declare -g WINSTON_NOCOLOR=false
 
+declare -ar REQUIRED_DEPS=(
+    "bash"
+    "dnf5"
+)
+
 
 ###########
 ### Log ###
@@ -70,7 +75,7 @@ log::trace ()
         printf 'Error in function %s at line %s\n' "${FUNCNAME[i + 1]}()" "${BASH_LINENO[i]}" 1>&2
     done
 
-    unset i
+    unset dep
 }
 
 
@@ -81,6 +86,12 @@ log::trace ()
 main::main ()
 {
     printf 'Winston version %s\n' "${WINSTON_VERSION}"
+
+    for dep in "${REQUIRED_DEPS[@]}"; do
+        if ! type -p "${dep}" &> /dev/null; then
+            log::error "[ERROR]: Could not find \"%s\"" "${dep}" 1>&2
+        fi
+    done
 }
 
 main::main "${@}"
