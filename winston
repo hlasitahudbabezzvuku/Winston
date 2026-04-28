@@ -17,5 +17,38 @@ if [[ ! "${BASH_VERSINFO[0]}" -ge 5 ]]; then
     exit 1
 fi
 
+
+##############
+### Config ###
+##############
+
 declare -r WINSTON_VERSION="2026.04.28"
+declare -g WINSTON_NOCOLOR=false
+
+
+###########
+### Log ###
+###########
+
+log::_print ()
+{
+    printf '[%s%s%s]: %s\n' "$( [[ "${WINSTON_NOCOLOR}" == false ]] && tput setaf ${2} )" "${1}" "$( [[ "${WINSTON_NOCOLOR}" == false ]] && tput sgr0 )" "${3}" 1>&2
+}
+
+log::info ()
+{
+    log::_print "INFO" 4 "${1}"
+}
+
+log::warn ()
+{
+    log::_print "WARNING" 3 "${1}"
+}
+
+
+log::error ()
+{
+    log::_print "ERROR" 1 "${1}"
+    exit 1
+}
 
