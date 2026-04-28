@@ -79,6 +79,26 @@ log::trace ()
 }
 
 
+##############
+### Engine ###
+##############
+
+engine::init ()
+{
+    echo "TODO"
+}
+
+engine::update ()
+{
+    echo "TODO"
+}
+
+engine::clean ()
+{
+    echo "TODO"
+}
+
+
 ############
 ### Main ###
 ############
