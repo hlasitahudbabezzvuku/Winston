@@ -142,6 +142,16 @@ main::main ()
                 ;;
         esac
     done
+
+    if [[ -n "${action:-}" ]]; then
+        if [[ -v ACTIONS[${action}] ]]; then
+            "${ACTIONS[${action}]}"
+        else
+            log::error "Invalid action: ${action}. Valid actions are: ${!ACTIONS[*]}"
+        fi
+    else
+        log::error "No action provided. Please specify one of: ${!ACTIONS[*]}"
+    fi
 }
 
 main::main "${@}"
