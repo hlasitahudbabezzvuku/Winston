@@ -73,3 +73,14 @@ log::trace ()
     unset i
 }
 
+
+############
+### Main ###
+############
+
+main::main ()
+{
+    printf 'Winston version %s\n' "${WINSTON_VERSION}"
+}
+
+main::main "${@}"
