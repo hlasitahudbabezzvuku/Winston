@@ -52,3 +52,14 @@ log::error ()
     exit 1
 }
 
+log::trace ()
+{
+    printf '[%sTRACE%s]: Printing stack trace:\n' "$( tput setaf 2 )" "$( tput sgr0 )" 1>&2
+
+    for ((i = 0; i < ${#FUNCNAME[@]} - 2; i++)); do
+        printf 'Error in function %s at line %s\n' "${FUNCNAME[i + 1]}()" "${BASH_LINENO[i]}" 1>&2
+    done
+
+    unset i
+}
+
