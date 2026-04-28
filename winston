@@ -30,9 +30,19 @@ declare -g WINSTON_NOCOLOR=false
 ### Log ###
 ###########
 
+log::_color ()
+{
+    [[ "${WINSTON_NOCOLOR}" == true ]] && printf '\033[1;%im' "${1}"
+}
+
+log::_reset ()
+{
+    [[ "${WINSTON_NOCOLOR}" == true ]] && printf '\033[0m'
+}
+
 log::_print ()
 {
-    printf '[%s%s%s]: %s\n' "$( [[ "${WINSTON_NOCOLOR}" == false ]] && tput setaf ${2} )" "${1}" "$( [[ "${WINSTON_NOCOLOR}" == false ]] && tput sgr0 )" "${3}" 1>&2
+    printf '[%s%s%s]: %s\n' "$( log::_color "${2}" )" "${1}" "$( log::_reset )" "${3}" 1>&2
 }
 
 log::info ()
