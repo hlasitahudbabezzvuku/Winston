@@ -127,6 +127,9 @@ main::main ()
                 printf 'Bash version %s\n' "${BASH_VERSINFO[*]}"
                 exit 0
                 ;;
+            '--help')
+                # TODO
+                ;;
             '--nocolor')
                 declare -g WINSTON_NOCOLOR="true"
                 ;;
