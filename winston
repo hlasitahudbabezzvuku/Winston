@@ -112,16 +112,12 @@ anaconda::_get_read_config ()
 anaconda::parse ()
 {
     declare ks_raw
-    declare ks_entries
+    declare ks
 
     ks_raw=$( anaconda::_get_read_config )
-    ks_entries=$( sed -n '/^%packages/,/^%end/p' "$ks_raw" | grep -v '^%' | sed 's/#.*//' | tr -d ' \r' | grep -v '^$' )
+    ks=$( sed -n '/^%packages/,/^%end/p' <<< "$ks_raw" | grep -v '^%' | sed 's/#.*//' | tr -d ' \r' | grep -v '^$' )
 
-    mapfile -t ENVS < <(echo "$ks_entries" | grep '^@\^' | sed 's/^@\^//' || true)
-    mapfile -t PKG_GROUPS < <(echo "$ks_entries" | grep '^@[^^]' | sed 's/^@//' || true)
-    mapfile -t STANDALONE < <(echo "$ks_entries" | grep -v '^[@-]' || true)
-    mapfile -t EXCLUDED < <(echo "$ks_entries" | grep '^-' | sed 's/^-//' || true)
-
+    printf "%s" "${ks}"
 }
 
 
@@ -131,7 +127,13 @@ anaconda::parse ()
 
 engine::list ()
 {
-    echo "TODO"
+    declare ks
+    ks=$( anaconda::parse )
+
+    declare -a ks_environments=()
+    declare -a ks_groups=()
+    declare -a ks_standalone_packages=()
+    declare -a ks_excluded_packages=()
 }
 
 
