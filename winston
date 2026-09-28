@@ -30,6 +30,7 @@ declare -ar REQUIRED_DEPS=(
     "bash"
     "dnf5"
     "run0"
+    "grep"
     "sed"
 )
 
