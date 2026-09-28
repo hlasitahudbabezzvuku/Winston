@@ -87,26 +87,26 @@ log::trace ()
 ### Anaconda ###
 ################
 
-anaconda::_get_config_raw ()
+anaconda::_get_read_config ()
 {
-    declare KS_PATH
-    declare KS_RAW
+    declare ks_path
+    declare ks_raw
 
     # Check for locations
     if [[ -f "${HOME}/anaconda-ks.cfg" ]]; then
-        KS_PATH="${HOME}/anaconda-ks.cfg"
+        ks_path="${HOME}/anaconda-ks.cfg"
     else
-        KS_PATH="/root/anaconda-ks.cfg"
+        ks_path="/root/anaconda-ks.cfg"
     fi
 
     # Check for write permission
-    if [[ -r "${KS_PATH}" ]]; then
-        KS_RAW=$( cat "${KS_PATH}" )
+    if [[ -r "${ks_path}" ]]; then
+        ks_raw=$( cat "${ks_path}" )
     else
-        KS_RAW=$( run0 cat "${KS_PATH}" )
+        ks_raw=$( run0 cat "${ks_path}" )
     fi
 
-    printf "%s" "$KS_RAW"
+    printf "%s" "$ks_raw"
 }
 
 anaconda::parse ()
