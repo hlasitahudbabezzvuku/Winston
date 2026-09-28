@@ -82,6 +82,38 @@ log::trace ()
 }
 
 
+################
+### Anaconda ###
+################
+
+anaconda::_get_config_raw ()
+{
+    declare KS_PATH
+    declare KS_RAW
+
+    # Check for locations
+    if [[ -f "${HOME}/anaconda-ks.cfg" ]]; then
+        KS_PATH="${HOME}/anaconda-ks.cfg"
+    else
+        KS_PATH="/root/anaconda-ks.cfg"
+    fi
+
+    # Check for write permission
+    if [[ -r "${KS_PATH}" ]]; then
+        KS_RAW=$( cat "${KS_PATH}" )
+    else
+        KS_RAW=$( run0 cat "${KS_PATH}" )
+    fi
+
+    printf "%s" "$KS_RAW"
+}
+
+anaconda::parse ()
+{
+    echo "TODO"
+}
+
+
 ##############
 ### Engine ###
 ##############
