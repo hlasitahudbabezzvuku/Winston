@@ -29,6 +29,8 @@ declare -g WINSTON_NOCOLOR=false
 declare -ar REQUIRED_DEPS=(
     "bash"
     "dnf5"
+    "run0"
+    "sed"
 )
 
 
