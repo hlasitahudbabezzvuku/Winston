@@ -31,7 +31,6 @@ declare -ar REQUIRED_DEPS=(
     "dnf5"
     "run0"
     "grep"
-    "sed"
 )
 
 
@@ -90,7 +89,6 @@ log::trace ()
 anaconda::_get_read_config ()
 {
     declare ks_path
-    declare ks_raw
 
     # Check for locations
     if [[ -f "${HOME}/anaconda-ks.cfg" ]]; then
@@ -101,23 +99,33 @@ anaconda::_get_read_config ()
 
     # Check for write permission
     if [[ -r "${ks_path}" ]]; then
-        ks_raw=$( cat "${ks_path}" )
+        cat "${ks_path}"
     else
-        ks_raw=$( run0 cat "${ks_path}" )
+        run0 cat "${ks_path}"
     fi
-
-    printf "%s" "$ks_raw"
 }
 
 anaconda::parse ()
 {
-    declare ks_raw
-    declare ks
+    declare in_packages=1
 
-    ks_raw=$( anaconda::_get_read_config )
-    ks=$( sed -n '/^%packages/,/^%end/p' <<< "$ks_raw" | grep -v '^%' | sed 's/#.*//' | tr -d ' \r' | grep -v '^$' )
+    while IFS= read -r line; do
+        line="${line%%#*}"                       # Strip comments
+        line="${line#"${line%%[![:space:]]*}"}"  # Trim leading spaces
+        line="${line%"${line##*[![:space:]]}"}"  # Trim trailing spaces
+        line="${line%$'\r'}"                     # Strip Windows CRLF
 
-    printf "%s" "${ks}"
+        [[ -z "${line}" ]] && continue
+
+        if [[ "${line}" =~ ^%packages ]]; then
+            in_packages=0
+            continue
+        elif [[ "${line}" =~ ^%end ]] && [[ ${in_packages} ]]; then
+            break
+        fi
+
+        [[ $in_packages -eq 0 ]] && printf "%s\n" "${line}"
+    done <<< "$( anaconda::_get_read_config )"
 }
 
 
@@ -127,13 +135,7 @@ anaconda::parse ()
 
 engine::list ()
 {
-    declare ks
-    ks=$( anaconda::parse )
-
-    declare -a ks_environments=()
-    declare -a ks_groups=()
-    declare -a ks_standalone_packages=()
-    declare -a ks_excluded_packages=()
+    anaconda::parse
 }
 
 
