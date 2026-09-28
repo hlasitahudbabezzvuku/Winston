@@ -135,7 +135,20 @@ anaconda::parse ()
 
 engine::list ()
 {
-    anaconda::parse
+    declare -a ks_environments=()
+    declare -a ks_groups=()
+    declare -a ks_excluded_packages=()
+    declare -a ks_standalone_packages=()
+
+    # Sort into categories
+    while IFS= read -r line; do
+        case "$line" in
+            @^* ) ks_environments+=("${line#@^}") ;;
+            @*  ) ks_groups+=("${line#@}") ;;
+            -*  ) ks_excluded_packages+=("${line#-}") ;;
+            *   ) ks_standalone_packages+=("$line") ;;
+        esac
+    done <<< "$( anaconda::parse )"
 }
 
 
