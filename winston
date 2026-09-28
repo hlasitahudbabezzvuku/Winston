@@ -105,6 +105,10 @@ main::main ()
 {
     printf 'Winston version %s\n' "${WINSTON_VERSION}"
 
+    if [[ $EUID -eq 0 ]]; then
+        log::error "This script shouldn't be run as root"
+    fi
+
     for dep in "${REQUIRED_DEPS[@]}"; do
         if ! type -p "${dep}" &> /dev/null; then
             log::error "[ERROR]: Could not find \"%s\"" "${dep}" 1>&2
